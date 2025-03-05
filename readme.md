@@ -14,6 +14,8 @@ A wordpress plugin
 - insert the shortcode [act]
 
 ## Codex
+|Input field|Description|
+|----|----|
 |Default After Time Text| text that will be displayed after the timer|
 |Default Before Time Text| text that will be displayed before the timer|
 |After Countdown Text|Text that will be displayed after the countdown reaches its target|
