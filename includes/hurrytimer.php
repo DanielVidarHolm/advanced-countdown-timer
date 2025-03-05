@@ -1,9 +1,9 @@
 <?php 
 
-function teledele_hurrytimer_shortcode($atts = [], $content = null) {
+function act_shortcode($atts = [], $content = null) {
     ob_start();
 
-    $options = get_option('teledele_hurrytimer_settings', []);
+    $options = get_option('act_settings', []);
     $current_day = strtolower(date('l'));
 
     $default_before_text = isset($options['default_before_text']) ? $options['default_before_text'] : 'BESTIL INDEN';
@@ -38,10 +38,10 @@ function teledele_hurrytimer_shortcode($atts = [], $content = null) {
     $after_countdown_text = isset($options['after_countdown_text']) ? $options['after_countdown_text'] : '';
 
     if (!$time_to_use) {
-        return "<div id='teledele-hurrytimer'></div>";
+        return "<div id='act'></div>";
     }
     ?>
-    <div id="teledele-hurrytimer"></div>
+    <div id="act"></div>
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -67,9 +67,9 @@ function teledele_hurrytimer_shortcode($atts = [], $content = null) {
 
                 if (timeLeft <= 0) {
                     if (afterCountdownText) {
-                        document.getElementById('teledele-hurrytimer').innerHTML = afterCountdownText;
+                        document.getElementById('act').innerHTML = afterCountdownText;
                     } else {
-                        document.getElementById('teledele-hurrytimer').innerHTML = '';
+                        document.getElementById('act').innerHTML = '';
                     }
                     return;
                 }
@@ -78,13 +78,13 @@ function teledele_hurrytimer_shortcode($atts = [], $content = null) {
                 const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
                 
-                document.getElementById('teledele-hurrytimer').innerHTML = beforeText + " " + hours + " TIMER " + minutes + " MIN. " + seconds + " SEK. " + afterText;
+                document.getElementById('act').innerHTML = beforeText + " " + hours + " TIMER " + minutes + " MIN. " + seconds + " SEK. " + afterText;
 
                 setTimeout(updateCountdown, 1000);
             }
 
             function staticMessage(){
-                document.getElementById('teledele-hurrytimer').innerHTML = beforeText + " " + afterText;
+                document.getElementById('act').innerHTML = beforeText + " " + afterText;
             }
             if (hideTime === "off"){
                 updateCountdown();
@@ -97,6 +97,6 @@ function teledele_hurrytimer_shortcode($atts = [], $content = null) {
     <?php
     return ob_get_clean();
 }
-add_shortcode('teledele_hurrytimer', 'teledele_hurrytimer_shortcode');
+add_shortcode('act', 'act_shortcode');
 
 ?>

@@ -1,9 +1,9 @@
 <?php
 /**
- * Options Page for Teledele Hurrytimer Plugin
+ * Options Page for ACT Plugin
  */
 
-function teledele_hurrytimer_page_html() {
+function act_page_html() {
     if ( ! current_user_can( 'manage_options' ) ) {
         return;
     }
@@ -12,9 +12,9 @@ function teledele_hurrytimer_page_html() {
         <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
         <form action="options.php" method="post">
             <?php 
-                settings_fields( 'teledele-hurrytimer_options' );
-                do_settings_sections( 'teledele-hurrytimer' );
-                submit_button( __( 'Save Settings', 'teledele-hurrytimer' ) );
+                settings_fields( 'act_options' );
+                do_settings_sections( 'act' );
+                submit_button( __( 'Save Settings', 'act' ) );
                 
             ?>
         </form>
@@ -22,50 +22,50 @@ function teledele_hurrytimer_page_html() {
     <?php
 }
 
-function teledele_hurrytimer_options_page() {
+function act_options_page() {
     add_submenu_page(
         'tools.php',
-        'Teledele Hurrytimer',
-        'Teledele Hurrytimer',
+        'ACT',
+        'ACT',
         'manage_options',
-        'teledele-hurrytimer',
-        'teledele_hurrytimer_page_html'
+        'act',
+        'act_page_html'
     );
 }
-add_action( 'admin_menu', 'teledele_hurrytimer_options_page' );
+add_action( 'admin_menu', 'act_options_page' );
 
-function teledele_hurrytimer_register_settings() {
+function act_register_settings() {
     register_setting(
-        'teledele-hurrytimer_options', // Option group
-        'teledele_hurrytimer_settings',
-        'teledele_hurrytimer_sanitize_settings' // Option name in the database
+        'act_options', // Option group
+        'act_settings',
+        'act_sanitize_settings' // Option name in the database
         // Optionally, you can add a sanitize callback as a third argument
         // 'sanitize_callback' => 'your_sanitize_function'
     );
 
     add_settings_section(
-        'teledele_hurrytimer_default_section', 
-        __( 'Hurry Timer Default Weekday Settings', 'teledele-hurrytimer' ),
+        'act_default_section', 
+        __( 'ACT Default Weekday Settings', 'act' ),
         '',
-        'teledele-hurrytimer'
+        'act'
     );
 
     add_settings_section(
-        'teledele_hurrytimer_special_section',
-        __('Hurry timer special settings', 'teledele-hurrytimer'),
+        'act_special_section',
+        __('ACT special settings', 'act'),
         '',
-        'teledele-hurrytimer'
+        'act'
     );
 
     $weekdays = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ];
 
     foreach ( $weekdays as $day ) {
         add_settings_field(
-            'teledele_hurrytimer_' . strtolower( $day ),
-            sprintf( __( '%s Time', 'teledele-hurrytimer' ), $day ),
-            'teledele_hurrytimer_time_field_callback',
-            'teledele-hurrytimer',
-            'teledele_hurrytimer_default_section',
+            'act_' . strtolower( $day ),
+            sprintf( __( '%s Time', 'act' ), $day ),
+            'act_time_field_callback',
+            'act',
+            'act_default_section',
             [ 'day' => $day ]
         );
 
@@ -73,66 +73,66 @@ function teledele_hurrytimer_register_settings() {
     }
 
     add_settings_field(
-        'teledele_hurrytimer_default_before_text', 
-        __( 'Default Before Time Text', 'teledele-hurrytimer' ),
-        'teledele_hurrytimer_default_text_callback',
-        'teledele-hurrytimer',
-        'teledele_hurrytimer_default_section',
+        'act_default_before_text', 
+        __( 'Default Before Time Text', 'act' ),
+        'act_default_text_callback',
+        'act',
+        'act_default_section',
         ['text_type' => 'before']
     );
 
     add_settings_field(
-        'teledele_hurrytimer_default_after_text', 
-        __( 'Default After Time Text', 'teledele-hurrytimer' ),
-        'teledele_hurrytimer_default_text_callback',
-        'teledele-hurrytimer',
-        'teledele_hurrytimer_default_section',
+        'act_default_after_text', 
+        __( 'Default After Time Text', 'act' ),
+        'act_default_text_callback',
+        'act',
+        'act_default_section',
         ['text_type' => 'after']
     );
 
     add_settings_field(
-        'teledele_hurrytimer_custom_dates',
+        'act_custom_dates',
         'Custom Countdown Dates',
-        'teledele_hurrytimer_custom_dates_callback',
-        'teledele-hurrytimer',
-        'teledele_hurrytimer_special_section'
+        'act_custom_dates_callback',
+        'act',
+        'act_special_section'
     );
 
     add_settings_field(
-        'teledele_hurrytimer_after_countdown_text', 
-        __( 'After Countdown Text', 'teledele-hurrytimer' ),
-        'teledele_hurrytimer_after_countdown_text_callback',
-        'teledele-hurrytimer',
-        'teledele_hurrytimer_default_section'
+        'act_after_countdown_text', 
+        __( 'After Countdown Text', 'act' ),
+        'act_after_countdown_text_callback',
+        'act',
+        'act_default_section'
     );
 }
-add_action( 'admin_init', 'teledele_hurrytimer_register_settings' );
+add_action( 'admin_init', 'act_register_settings' );
 
-function teledele_hurrytimer_after_countdown_text_callback() {
-    $options = get_option('teledele_hurrytimer_settings', []);
-    $field_name = 'teledele_hurrytimer_settings[after_countdown_text]';
+function act_after_countdown_text_callback() {
+    $options = get_option('act_settings', []);
+    $field_name = 'act_settings[after_countdown_text]';
     $value = isset($options['after_countdown_text']) ? esc_attr($options['after_countdown_text']) : '';
     echo '<input type="text" name="' . $field_name . '" value="' . $value . '" />';
 }
 
-    function teledele_hurrytimer_time_field_callback( $args ) {
-        $options = get_option( 'teledele_hurrytimer_settings', [] );
+    function act_time_field_callback( $args ) {
+        $options = get_option( 'act_settings', [] );
         $day = $args['day'];
-        $field_name = 'teledele_hurrytimer_settings[' . strtolower( $day ) . ']';
+        $field_name = 'act_settings[' . strtolower( $day ) . ']';
         $value = isset( $options[ strtolower( $day ) ] ) ? esc_attr( $options[ strtolower( $day ) ] ) : '';
         echo '<input type="time" name="' . $field_name . '" value="' . $value . '" />';
     }
 
-    function teledele_hurrytimer_default_text_callback($args) {
-        $options = get_option('teledele_hurrytimer_settings', []);
+    function act_default_text_callback($args) {
+        $options = get_option('act_settings', []);
         $text_type = $args['text_type']; // Either 'before' or 'after'
-        $field_name = 'teledele_hurrytimer_settings[default_' . $text_type . '_text]';
+        $field_name = 'act_settings[default_' . $text_type . '_text]';
         $value = isset($options['default_' . $text_type . '_text']) ? esc_attr($options['default_' . $text_type . '_text']) : '';
     
         echo '<input type="text" name="' . $field_name . '" value="' . $value . '" />';
     }
 
-    function teledele_hurrytimer_sanitize_settings($input) {
+    function act_sanitize_settings($input) {
         $sanitized = [];
         foreach ($input as $key => $value) {
             if ($key === 'custom_dates') {
@@ -150,8 +150,8 @@ function teledele_hurrytimer_after_countdown_text_callback() {
         return $sanitized;
     }
 
-function teledele_hurrytimer_custom_dates_callback() {
-    $options = get_option('teledele_hurrytimer_settings', []);
+function act_custom_dates_callback() {
+    $options = get_option('act_settings', []);
     $custom_dates = isset($options['custom_dates']) ? $options['custom_dates'] : [];
 
     echo '<div id="custom-dates-container">';
@@ -159,12 +159,12 @@ function teledele_hurrytimer_custom_dates_callback() {
     if (!empty($custom_dates)) {
         foreach ($custom_dates as $index => $entry) {
             echo '<div class="custom-date-entry">';
-            echo '<input type="date" name="teledele_hurrytimer_settings[custom_dates][' . $index . '][date]" value="' . esc_attr($entry['date']) . '" />';
-            echo '<input type="time" name="teledele_hurrytimer_settings[custom_dates][' . $index . '][time]" value="' . esc_attr($entry['time']) . '" />';
-            echo '<input type="text" name="teledele_hurrytimer_settings[custom_dates][' . $index . '][b_text]" placeholder="Before time" value="' . esc_attr($entry['b_text']) . '" />';
-            echo '<input type="text" name="teledele_hurrytimer_settings[custom_dates][' . $index . '][a_text]" placeholder="After time" value="' . esc_attr($entry['a_text']) . '" />';
-            echo '<label for="teledele_hurrytimer_settings[custom_dates][' . $index . '][hide_time]">Hide countown</label>';
-            echo '<input type="checkbox" name="teledele_hurrytimer_settings[custom_dates][' . $index . '][hide_time]" ' . checked(isset($entry['hide_time']) && $entry['hide_time'] === 'on', true, false) . ' />';
+            echo '<input type="date" name="act_settings[custom_dates][' . $index . '][date]" value="' . esc_attr($entry['date']) . '" />';
+            echo '<input type="time" name="act_settings[custom_dates][' . $index . '][time]" value="' . esc_attr($entry['time']) . '" />';
+            echo '<input type="text" name="act_settings[custom_dates][' . $index . '][b_text]" placeholder="Before time" value="' . esc_attr($entry['b_text']) . '" />';
+            echo '<input type="text" name="act_settings[custom_dates][' . $index . '][a_text]" placeholder="After time" value="' . esc_attr($entry['a_text']) . '" />';
+            echo '<label for="act_settings[custom_dates][' . $index . '][hide_time]">Hide countown</label>';
+            echo '<input type="checkbox" name="act_settings[custom_dates][' . $index . '][hide_time]" ' . checked(isset($entry['hide_time']) && $entry['hide_time'] === 'on', true, false) . ' />';
             echo '<button type="button" class="remove-date">Remove</button>';
             echo '</div>';
         }
@@ -184,14 +184,14 @@ function teledele_hurrytimer_custom_dates_callback() {
             let div = document.createElement('div');
             div.classList.add('custom-date-entry');
             div.innerHTML = `
-                <input type="date" name="teledele_hurrytimer_settings[custom_dates][${index}][date]" />
-                <input type="time" name="teledele_hurrytimer_settings[custom_dates][${index}][time]" />
-                <input type="text" name="teledele_hurrytimer_settings[custom_dates][${index}][a_text]" placeholder="Before time" />
-                <input type="text" name="teledele_hurrytimer_settings[custom_dates][${index}][b_text]" placeholder="After time" />
-                <label for="teledele_hurrytimer_settings[custom_dates][${index}][hide_time]">
+                <input type="date" name="act_settings[custom_dates][${index}][date]" />
+                <input type="time" name="act_settings[custom_dates][${index}][time]" />
+                <input type="text" name="act_settings[custom_dates][${index}][a_text]" placeholder="Before time" />
+                <input type="text" name="act_settings[custom_dates][${index}][b_text]" placeholder="After time" />
+                <label for="act_settings[custom_dates][${index}][hide_time]">
                 Hide countown
                 </label>
-                <input type="checkbox" name="teledele_hurrytimer_settings[custom_dates][${index}][hide_time]" />
+                <input type="checkbox" name="act_settings[custom_dates][${index}][hide_time]" />
                 <button type="button" class="remove-date">Remove</button>
             `;
             container.appendChild(div);
